@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PlanetContext from '../context/PlanetContext';
 
 function Table() {
-  const { data } = useContext(PlanetContext);
+  const { data, filters: { filterByName } } = useContext(PlanetContext);
 
   return (
     <table>
@@ -24,27 +24,33 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        {data.map(({
-          name, rotation_period: rotationPeriod, orbital_period: orbitalPeriod, diameter,
-          climate, gravity, terrain, surface_water: surfaceWater, population, films,
-          created, edited, url,
-        }) => (
-          <tr key={ name }>
-            <td>{name}</td>
-            <td>{rotationPeriod}</td>
-            <td>{orbitalPeriod}</td>
-            <td>{diameter}</td>
-            <td>{climate}</td>
-            <td>{gravity}</td>
-            <td>{terrain}</td>
-            <td>{surfaceWater}</td>
-            <td>{population}</td>
-            <td>{films.reduce((acc, film) => (acc + film), '')}</td>
-            <td>{created}</td>
-            <td>{edited}</td>
-            <td>{url}</td>
-          </tr>
-        ))}
+        {data.filter((planet) => {
+          if (filterByName.name !== '') {
+            return planet.name.includes(filterByName.name);
+          }
+          return planet;
+        })
+          .map(({
+            name, rotation_period: rotationPeriod, orbital_period: orbitalPeriod,
+            diameter, climate, gravity, terrain, surface_water: surfaceWater, population,
+            films, created, edited, url,
+          }) => (
+            <tr key={ name }>
+              <td>{name}</td>
+              <td>{rotationPeriod}</td>
+              <td>{orbitalPeriod}</td>
+              <td>{diameter}</td>
+              <td>{climate}</td>
+              <td>{gravity}</td>
+              <td>{terrain}</td>
+              <td>{surfaceWater}</td>
+              <td>{population}</td>
+              <td>{films.reduce((acc, film) => (acc + film), '')}</td>
+              <td>{created}</td>
+              <td>{edited}</td>
+              <td>{url}</td>
+            </tr>
+          ))}
       </tbody>
     </table>
   );

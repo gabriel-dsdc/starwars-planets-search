@@ -2,17 +2,44 @@
 
   --cell-color-even: rgb(18, 18, 18);
 
-  --cell-color-even-opacity: rgba(18, 18, 18, 0.5);
-
   --cell-color-odd: rgb(36, 36, 36);
-
-  --cell-color-odd-opacity: rgba(36, 36, 36, 0.5);
 }
 
 body {
-  background-color: gray;
+  background-color: black;
   color: white;
   margin: 0;
+}
+
+.logo {
+  display: flex;
+  margin: auto;
+  max-width: 500px;
+  width: 90vw;
+}
+
+.logo--text {
+  font-family: sans-serif;
+  font-size: 33px;
+  font-weight: 700;
+  letter-spacing: 40px;
+  margin: auto;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+form {
+  margin: 25px;
+}
+
+label {
+  font-family: Verdana , Geneva , Tahoma , sans-serif;
+  font-weight: 900;
+}
+
+input {
+  border-radius: 5px;
+  padding: 5px;
 }
 
 table, th, td {
@@ -36,10 +63,6 @@ tbody > tr:nth-child( odd ) {
   background-color: var(--cell-color-odd);
 }
 
-tbody > tr:nth-child( even ):hover {
-  background-color: var(--cell-color-even-opacity);
-}
-
-tbody > tr:nth-child( odd ):hover {
-  background-color: var(--cell-color-odd-opacity);
+tbody > tr:nth-child( even ):hover, tbody > tr:nth-child( odd ):hover {
+  background-color: gray;
 }

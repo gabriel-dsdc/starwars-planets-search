@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PlanetContext from './PlanetContext';
 import getPlanetsData from '../services/api';
+import setFilter from '../services/useFilter';
 
 const INITIAL_STATE = {
   data: [{
@@ -19,6 +20,12 @@ const INITIAL_STATE = {
     edited: '',
     url: '',
   }],
+  filters: {
+    filterByName: {
+      name: '',
+    },
+  },
+  setFilter: () => {},
 };
 
 function PlanetProvider({ children }) {
@@ -33,6 +40,7 @@ function PlanetProvider({ children }) {
         {
           ...prevState,
           data: planets,
+          setFilter: (filterType, value) => { setFilter(setState, filterType, value); },
         }));
     });
   }, []);
