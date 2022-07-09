@@ -1,8 +1,12 @@
 import React, { useContext } from 'react';
 import PlanetContext from '../context/PlanetContext';
+import setFilterByNumericValues from '../services/setFilterByNumericValues';
 
 function Table() {
-  const { data, filters: { filterByName } } = useContext(PlanetContext);
+  const {
+    data,
+    filters: { filterByName, filterByNumericValues },
+  } = useContext(PlanetContext);
 
   return (
     <table>
@@ -24,12 +28,11 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        {data.filter((planet) => {
-          if (filterByName.name !== '') {
-            return planet.name.includes(filterByName.name);
-          }
-          return planet;
-        })
+        {data.reduce((acc) => {
+          acc = acc.filter((accPlanet) => accPlanet.name.includes(filterByName.name));
+          acc = setFilterByNumericValues(acc, filterByNumericValues);
+          return acc;
+        }, [...data])
           .map(({
             name, rotation_period: rotationPeriod, orbital_period: orbitalPeriod,
             diameter, climate, gravity, terrain, surface_water: surfaceWater, population,

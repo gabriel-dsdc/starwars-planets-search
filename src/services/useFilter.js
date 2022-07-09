@@ -1,4 +1,4 @@
-function setFilter(setState, filterType, value) {
+function setFilter(setState, filterType, filter) {
   switch (filterType) {
   case 'filterByName':
     setState((prevState) => ({
@@ -6,11 +6,28 @@ function setFilter(setState, filterType, value) {
       filters: {
         ...prevState.filters,
         filterByName: {
-          name: value,
+          name: filter,
         },
       },
     }));
     break;
+  case 'filterByNumericValues': {
+    const { column, comparison, value } = filter;
+
+    setState((prevState) => ({
+      ...prevState,
+      filters: {
+        ...prevState.filters,
+        filterByNumericValues: [
+          ...prevState.filters.filterByNumericValues,
+          {
+            column,
+            comparison,
+            value,
+          }],
+      },
+    }));
+    break; }
   default:
     break;
   }

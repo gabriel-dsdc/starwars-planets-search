@@ -24,6 +24,7 @@ const INITIAL_STATE = {
     filterByName: {
       name: '',
     },
+    filterByNumericValues: [],
   },
   setFilter: () => {},
 };
