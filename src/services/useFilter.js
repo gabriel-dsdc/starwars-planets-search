@@ -17,6 +17,25 @@ function setFilter(setState, filterType, filter) {
       },
     }));
     break; }
+  case 'removeNumericValueFilter':
+    setState((prevState) => ({
+      ...prevState,
+      filters: {
+        ...prevState.filters,
+        filterByNumericValues: prevState.filters.filterByNumericValues
+          .filter((numericValueFilter) => numericValueFilter.column !== filter),
+      },
+    }));
+    break;
+  case 'removeAllFilters':
+    setState((prevState) => ({
+      ...prevState,
+      filters: {
+        ...prevState.filters,
+        filterByNumericValues: [],
+      },
+    }));
+    break;
   default:
     setState((prevState) => ({
       ...prevState,
