@@ -26,7 +26,7 @@ const INITIAL_STATE = {
     },
     filterByNumericValues: [],
   },
-  setFilter: () => {},
+  setFilter: undefined,
 };
 
 function PlanetProvider({ children }) {

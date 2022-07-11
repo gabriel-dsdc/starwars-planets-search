@@ -6,6 +6,13 @@ function Form() {
     column: 'population',
     comparison: 'maior que',
     value: '0',
+    columnOptions: [
+      { id: 0, columnValue: 'population' },
+      { id: 1, columnValue: 'orbital_period' },
+      { id: 2, columnValue: 'rotation_period' },
+      { id: 3, columnValue: 'diameter' },
+      { id: 4, columnValue: 'surface_water' },
+    ],
   };
 
   const { setFilter } = useContext(PlanetContext);
@@ -25,13 +32,19 @@ function Form() {
   }
 
   function setFilterByNumericValues() {
+    setFormState({
+      ...formState,
+      column: formState.columnOptions[0].columnValue,
+      columnOptions: formState.columnOptions
+        .filter((column) => column.columnValue !== formState.column),
+    });
     setFilter('filterByNumericValues', formState);
   }
 
   return (
     <form onChange={ handleForm }>
       <label htmlFor="name-filter">
-        Planet Name:&nbsp;
+        Planet Name:
         <input
           data-testid="name-filter"
           id="name-filter"
@@ -41,17 +54,15 @@ function Form() {
         />
       </label>
       <label htmlFor="column-filter">
-        Coluna:&nbsp;
+        Coluna:
         <select data-testid="column-filter" id="column-filter" name="column">
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="diameter">diameter</option>
-          <option value="surface_water">surface_water</option>
+          {formState.columnOptions.map(({ id, columnValue }) => (
+            <option key={ id } value={ columnValue }>{columnValue}</option>
+          ))}
         </select>
       </label>
       <label htmlFor="comparison-filter">
-        Comparison:&nbsp;
+        Comparison:
         <select data-testid="comparison-filter" id="comparison-filter" name="comparison">
           <option value="maior que">maior que</option>
           <option value="menor que">menor que</option>
@@ -59,13 +70,14 @@ function Form() {
         </select>
       </label>
       <label htmlFor="value-filter">
-        Value:&nbsp;
+        Value:
         <input
           data-testid="value-filter"
           id="value-filter"
           name="value"
           type="number"
           defaultValue={ formState.value }
+          onFocus={ ({ target }) => target.select() }
         />
       </label>
       <button

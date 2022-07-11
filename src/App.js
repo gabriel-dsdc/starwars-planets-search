@@ -3,7 +3,7 @@ import './App.css';
 import Form from './components/Form';
 import Table from './components/Table';
 import PlanetProvider from './context/PlanetProvider';
-import Logo from './logo.svg';
+import Logo from './logo.png';
 
 function App() {
   return (

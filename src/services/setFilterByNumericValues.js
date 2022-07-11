@@ -10,11 +10,9 @@ function setFilterByNumericValues(acc, filterByNumericValues) {
     case 'menor que':
       acc = acc.filter((accPlanet) => Number(accPlanet[planetKey]) < filterValue);
       break;
-    case 'igual a':
+    default:
       acc = acc
         .filter((accPlanet) => Number(accPlanet[planetKey]) === filterValue);
-      break;
-    default:
       break;
     }
   }
