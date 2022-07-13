@@ -67,6 +67,15 @@ button:hover {
   color: rgb(255, 232, 31);
 }
 
+#sort-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+#sort-input-container > label {
+  display: inline-block;
+}
+
 table, th, td {
   border-bottom: 1px solid rgb(81, 81, 81);
   border-collapse: collapse;

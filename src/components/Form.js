@@ -13,9 +13,14 @@ function Form() {
       { id: 3, columnValue: 'diameter' },
       { id: 4, columnValue: 'surface_water' },
     ],
+    order: {
+      column: 'population',
+      sort: 'ASC',
+    },
   };
 
-  const { filters: { filterByNumericValues }, setFilter } = useContext(PlanetContext);
+  const { filters: { filterByNumericValues },
+    setFilter, setOrder } = useContext(PlanetContext);
   const [formState, setFormState] = useState(INITIAL_STATE);
 
   useEffect(() => {
@@ -25,8 +30,18 @@ function Form() {
     }));
   }, [formState.columnOptions]);
 
-  function handleForm({ target: { name, value } }) {
-    if (name) {
+  function handleForm({ target: { name, value, id } }) {
+    if (id === 'column-sort'
+    || id === 'column-sort-input-asc'
+    || id === 'column-sort-input-desc') {
+      setFormState({
+        ...formState,
+        order: {
+          ...formState.order,
+          [name]: value,
+        },
+      });
+    } else if (name) {
       setFormState({
         ...formState,
         [name]: value,
@@ -45,6 +60,10 @@ function Form() {
         .filter((column) => column.columnValue !== formState.column),
     });
     if (formState.column) setFilter('filterByNumericValues', formState);
+  }
+
+  function setOrderByColumn() {
+    setOrder(formState.order);
   }
 
   function handleRemove({ target: { name } }) {
@@ -69,7 +88,7 @@ function Form() {
           />
         </label>
         <label htmlFor="column-filter">
-          Coluna:
+          Column:
           <select data-testid="column-filter" id="column-filter" name="column">
             {formState.columnOptions[0]
             && formState.columnOptions.map(({ id, columnValue }) => (
@@ -104,14 +123,53 @@ function Form() {
           type="button"
           onClick={ setFilterByNumericValues }
         >
-          FILTRAR
+          FILTER
         </button>
         <button
           data-testid="button-remove-filters"
           type="button"
           onClick={ handleRemoveAll }
         >
-          REMOVER FILTROS
+          REMOVE FILTERS
+        </button>
+        <label htmlFor="column-sort">
+          Sort:
+          <select data-testid="column-sort" id="column-sort" name="column">
+            <option value="population">population</option>
+            <option value="orbital_period">orbital_period</option>
+            <option value="diameter">diameter</option>
+            <option value="rotation_period">rotation_period</option>
+            <option value="surface_water">surface_water</option>
+          </select>
+        </label>
+        <div id="sort-input-container">
+          <label htmlFor="column-sort-input-asc">
+            Ascending
+            <input
+              data-testid="column-sort-input-asc"
+              type="radio"
+              value="ASC"
+              id="column-sort-input-asc"
+              name="sort"
+            />
+          </label>
+          <label htmlFor="column-sort-input-desc">
+            Descending
+            <input
+              data-testid="column-sort-input-desc"
+              type="radio"
+              value="DESC"
+              id="column-sort-input-desc"
+              name="sort"
+            />
+          </label>
+        </div>
+        <button
+          data-testid="column-sort-button"
+          type="button"
+          onClick={ setOrderByColumn }
+        >
+          ORDER
         </button>
       </form>
       {filterByNumericValues[0]
@@ -125,7 +183,7 @@ function Form() {
               name={ `btn-remove--${column}` }
               onClick={ handleRemove }
             >
-              REMOVER FILTRO
+              REMOVE FILTER
             </button>
           </span>
           <br />

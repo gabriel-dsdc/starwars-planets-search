@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PlanetContext from './PlanetContext';
 import getPlanetsData from '../services/api';
-import setFilter from '../services/useFilter';
+import { setFilter, setOrder } from '../services/useFilter';
 
 const INITIAL_STATE = {
   data: [{
@@ -25,8 +25,13 @@ const INITIAL_STATE = {
       name: '',
     },
     filterByNumericValues: [],
+    order: {
+      column: '',
+      sort: 'ASC',
+    },
   },
   setFilter: undefined,
+  setOrder: undefined,
 };
 
 function PlanetProvider({ children }) {
@@ -42,6 +47,7 @@ function PlanetProvider({ children }) {
           ...prevState,
           data: planets,
           setFilter: (filterType, value) => { setFilter(setState, filterType, value); },
+          setOrder: (order) => { setOrder(setState, order); },
         }));
     });
   }, []);

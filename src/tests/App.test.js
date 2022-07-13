@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import App from '../App';
 import userEvent from '@testing-library/user-event';
 import testData from '../../cypress/mocks/testData';
@@ -13,8 +13,12 @@ let selectColumnEl;
 let selectComparisonEl;
 let inputValueEl;
 let filterBtnEl;
+let orderBtnEl;
 
 let allTableColumns;
+
+let firstPlanetName;
+let lastPlanetName;
 
 const PLANET_NAME = 'oo';
 const PLANET_COLUMN_DIAMETER = 'diameter';
@@ -34,12 +38,16 @@ describe('Teste de formulário', () => {
 
     logoEl = screen.getByRole('img', {  name: /planets search logo/i});
     inputPlanetNameEl = screen.getByRole('textbox', {name: /planet name:/i});
-    selectColumnEl = screen.getByRole('combobox', {  name: /coluna:/i});
+    selectColumnEl = screen.getByRole('combobox', {  name: /column:/i});
     selectComparisonEl = screen.getByRole('combobox', {  name: /comparison:/i});
     inputValueEl = screen.getByRole('spinbutton', {  name: /value:/i});
-    filterBtnEl = screen.getByRole('button', {  name: /filtrar/i})
+    filterBtnEl = screen.getByRole('button', {  name: /^filter$/i});
+    orderBtnEl = screen.getByRole('button', {  name: /order/i});
 
     allTableColumns = screen.getAllByRole('columnheader');
+
+    firstPlanetName = screen.getAllByRole('cell')[0];
+    lastPlanetName = screen.getAllByRole('cell')[117];
   });
 
   afterEach(() => {
@@ -111,5 +119,64 @@ describe('Teste de formulário', () => {
     userEvent.click(filterBtnEl);
     allTableRows = screen.getAllByRole('row');
     expect(allTableRows).toHaveLength(2);
+  });
+
+  test('Testa o botão de remover um filtro adicionado', () => {
+    userEvent.click(filterBtnEl);
+    const populationFilterEl = screen.getByText(/population maior que 0/i);
+    const removePopulationFilterBtnEl = within(populationFilterEl).getByRole('button', {  name: /remove filter/i});
+    expect(populationFilterEl).toBeInTheDocument();
+    expect(removePopulationFilterBtnEl).toBeInTheDocument();
+
+    userEvent.click(removePopulationFilterBtnEl);
+
+    expect(populationFilterEl).not.toBeInTheDocument();
+  });
+
+  test('Testa o botão de remover todos os filtros', () => {
+    userEvent.click(filterBtnEl);
+    userEvent.click(filterBtnEl);
+    userEvent.click(filterBtnEl);
+    userEvent.click(filterBtnEl);
+    userEvent.click(filterBtnEl);
+    
+    expect(screen.getAllByRole('button', {name: /^remove filter$/i})).toHaveLength(5);
+    userEvent.click(filterBtnEl);
+    expect(screen.getAllByRole('button', {name: /^remove filter$/i})).toHaveLength(5);
+
+    const orbitalPeriodFilterEl = screen.getByText(/orbital_period maior que 0/i);
+    expect(orbitalPeriodFilterEl).toBeInTheDocument();
+
+    const removeAllFiltersBtnEl = screen.getByRole('button', {  name: /remove filters/i});
+    userEvent.click(removeAllFiltersBtnEl);
+
+    expect(orbitalPeriodFilterEl).not.toBeInTheDocument();
+  });
+
+  test('Verifica se começa ordenado alfabeticamente e depois testa a ordenação de população ascendente', () => {
+    expect(firstPlanetName).toHaveAccessibleName(/Alderaan/i);
+    expect(lastPlanetName).toHaveAccessibleName(/Yavin IV/i);
+    userEvent.click(orderBtnEl);
+
+    firstPlanetName = screen.getAllByRole('cell')[0];
+    lastPlanetName = screen.getAllByRole('cell')[117];
+    expect(firstPlanetName).toHaveAccessibleName(/Yavin IV/i);
+    expect(lastPlanetName).toHaveAccessibleName(/Dagobah/i);
+  });
+
+  test('Testa a ordenação de população descendente', () => {
+    const selectSortEl = screen.getByRole('combobox', {  name: /sort:/i});
+    const descRadioBtnEl = screen.getByRole('radio', {  name: /descending/i});
+
+    expect(selectSortEl).toHaveValue('population');
+    userEvent.selectOptions(selectSortEl, 'surface_water');
+    userEvent.click(descRadioBtnEl);
+    expect(descRadioBtnEl).toBeChecked();
+    userEvent.click(orderBtnEl);
+
+    firstPlanetName = screen.getAllByRole('cell')[0];
+    lastPlanetName = screen.getAllByRole('cell')[117]
+    expect(firstPlanetName).toHaveAccessibleName(/Hoth/i);
+    expect(lastPlanetName).toHaveAccessibleName(/Coruscant/i);
   });
 });

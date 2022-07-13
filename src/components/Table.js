@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import PlanetContext from '../context/PlanetContext';
 import setFilterByNumericValues from '../services/setFilterByNumericValues';
+import { setOrderByColumn, sortAlphabetically } from '../services/setOrderByColumn';
 
 function Table() {
   const {
     data,
-    filters: { filterByName, filterByNumericValues },
+    filters: { filterByName, filterByNumericValues, order },
   } = useContext(PlanetContext);
 
   return (
@@ -30,6 +31,11 @@ function Table() {
       <tbody>
         {data.reduce((acc) => {
           acc = acc.filter((accPlanet) => accPlanet.name.includes(filterByName.name));
+          if (order.column) {
+            setOrderByColumn(acc, order);
+          } else {
+            sortAlphabetically(acc);
+          }
           acc = setFilterByNumericValues(acc, filterByNumericValues);
           return acc;
         }, [...data])
@@ -39,7 +45,7 @@ function Table() {
             films, created, edited, url,
           }) => (
             <tr key={ name }>
-              <td>{name}</td>
+              <td data-testid="planet-name">{name}</td>
               <td>{rotationPeriod}</td>
               <td>{orbitalPeriod}</td>
               <td>{diameter}</td>

@@ -1,4 +1,4 @@
-function setFilter(setState, filterType, filter) {
+export function setFilter(setState, filterType, filter) {
   switch (filterType) {
   case 'filterByNumericValues': {
     const { column, comparison, value } = filter;
@@ -50,4 +50,12 @@ function setFilter(setState, filterType, filter) {
   }
 }
 
-export default setFilter;
+export function setOrder(setState, order) {
+  setState((prevState) => ({
+    ...prevState,
+    filters: {
+      ...prevState.filters,
+      order,
+    },
+  }));
+}
