@@ -1,5 +1,5 @@
 const getPlanetsData = () => (
-  fetch('https://swapi-trybe.herokuapp.com/api/planets/')
+  fetch('https://swapi.dev/api/planets/')
     .then((res) => (res.json()))
     .then((res) => (res))
 );
