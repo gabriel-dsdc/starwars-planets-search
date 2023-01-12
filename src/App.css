@@ -76,6 +76,13 @@ button:hover {
   display: inline-block;
 }
 
+table {
+  border-radius: 10px;
+  margin: auto auto 15px;
+  max-width: 95vw;
+  overflow: hidden;
+}
+
 table, th, td {
   border-bottom: 1px solid rgb(81, 81, 81);
   border-collapse: collapse;
